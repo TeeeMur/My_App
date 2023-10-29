@@ -13,11 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.requiredSizeIn
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -34,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -46,8 +41,79 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
+	        if (savedInstanceState != null) {
+		        rectCount = savedInstanceState.getInt(keyString)
+	        }
+	        val countOfRectangles = remember{mutableStateOf(rectCount)}
+	        val orientation = LocalConfiguration.current
+	        Column(
+		        modifier = Modifier
+			        .fillMaxSize()
+			        .background(Color.Black)
+			        .padding(10.dp),
+		        horizontalAlignment = Alignment.CenterHorizontally,
+		        verticalArrangement = Arrangement.SpaceBetween
+	        ) {
+		        MyLazyVerticalGrid(countOfRectangles, orientation)
+		        Button(
+			        onClick = { rectCount++
+				        countOfRectangles.value = rectCount },
+			        colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+			        modifier = Modifier
+				        .fillMaxWidth()
+		        ) {
+			        Text(
+				        text = stringResource(R.string.button_name),
+				        fontSize = 24.sp,
+				        color = Color.Black
+			        )
+		        }
+	        }
         }
     }
+
+	override fun onSaveInstanceState(outState: Bundle) {
+		outState.putInt(keyString, rectCount)
+		super.onSaveInstanceState(outState)
+	}
 }
 
+
+@Composable
+fun Rectangle(num: Int) {
+	Card(modifier = Modifier
+		.requiredSize(100.dp),
+		colors = CardDefaults.cardColors(
+			containerColor = (if (num % 2 == 0) Color.Red else Color.Blue)
+		),
+	){
+		Box(
+			modifier = Modifier.fillMaxSize(),
+			contentAlignment = Alignment.Center
+		) {
+			Text(
+				text = num.toString(),
+				fontSize = 32.sp,
+				color = Color.White,
+				fontWeight = FontWeight.Bold
+			)
+		}
+	}
+}
+
+@Composable
+fun MyLazyVerticalGrid(countOfBoxes: MutableState<Int>, screenConfig: Configuration) {
+	val cells = (if (screenConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
+	val gridMaxHeight = (if (screenConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.8f else 0.92f)
+	LazyVerticalGrid(
+		columns = GridCells.Fixed(cells),
+		verticalArrangement = Arrangement.spacedBy(10.dp),
+		horizontalArrangement = Arrangement.spacedBy(10.dp),
+		modifier = Modifier
+			.fillMaxHeight(gridMaxHeight)
+	){
+		items(countOfBoxes.value) {
+			Rectangle(num = it)
+		}
+	}
+}
