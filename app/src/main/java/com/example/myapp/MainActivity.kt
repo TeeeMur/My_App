@@ -33,19 +33,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+const val STR_NAME_SAVE_COUNT = "objCount"
+const val INT_COUNT_OF_COLUMNS_LANDSCAPE = 4
+const val INT_COUNT_OF_COLUMNS_PORTRAIT = 3
+const val FLOAT_SIZE_OF_COLUMNS_LANDSCAPE = 0.8f
+const val FLOAT_SIZE_OF_COLUMNS_PORTRAIT = 0.92f
 class MainActivity : ComponentActivity() {
 
 	private var rectCount = 0
-	private val keyString = "objCount"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
 	        if (savedInstanceState != null) {
-		        rectCount = savedInstanceState.getInt(keyString)
+		        rectCount = savedInstanceState.getInt(STR_NAME_SAVE_COUNT)
 	        }
 	        val countOfRectangles = remember{mutableStateOf(rectCount)}
-	        val orientation = LocalConfiguration.current
 	        Column(
 		        modifier = Modifier
 			        .fillMaxSize()
@@ -54,10 +56,12 @@ class MainActivity : ComponentActivity() {
 		        horizontalAlignment = Alignment.CenterHorizontally,
 		        verticalArrangement = Arrangement.SpaceBetween
 	        ) {
-		        MyLazyVerticalGrid(countOfRectangles, orientation)
+		        MyLazyVerticalGrid(countOfRectangles)
 		        Button(
-			        onClick = { rectCount++
-				        countOfRectangles.value = rectCount },
+			        onClick = {
+				        rectCount++
+				        countOfRectangles.value = rectCount
+			        },
 			        colors = ButtonDefaults.buttonColors(containerColor = Color.White),
 			        modifier = Modifier
 				        .fillMaxWidth()
@@ -73,7 +77,7 @@ class MainActivity : ComponentActivity() {
     }
 
 	override fun onSaveInstanceState(outState: Bundle) {
-		outState.putInt(keyString, rectCount)
+		outState.putInt(STR_NAME_SAVE_COUNT, rectCount)
 		super.onSaveInstanceState(outState)
 	}
 }
@@ -102,18 +106,20 @@ fun Rectangle(num: Int) {
 }
 
 @Composable
-fun MyLazyVerticalGrid(countOfBoxes: MutableState<Int>, screenConfig: Configuration) {
-	val cells = (if (screenConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) 4 else 3)
-	val gridMaxHeight = (if (screenConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.8f else 0.92f)
+fun MyLazyVerticalGrid(countOfBoxes: MutableState<Int>) {
+	val screenConfig = LocalConfiguration.current
+	val countOfColumns =
+		(if (screenConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) INT_COUNT_OF_COLUMNS_LANDSCAPE else INT_COUNT_OF_COLUMNS_PORTRAIT)
+	val gridMaxHeight = (if (screenConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) FLOAT_SIZE_OF_COLUMNS_LANDSCAPE else FLOAT_SIZE_OF_COLUMNS_PORTRAIT)
 	LazyVerticalGrid(
-		columns = GridCells.Fixed(cells),
+		columns = GridCells.Fixed(countOfColumns),
 		verticalArrangement = Arrangement.spacedBy(10.dp),
 		horizontalArrangement = Arrangement.spacedBy(10.dp),
 		modifier = Modifier
 			.fillMaxHeight(gridMaxHeight)
 	){
-		items(countOfBoxes.value) {
-			Rectangle(num = it)
+		items(countOfBoxes.value) {numOfBox ->
+			Rectangle(num = numOfBox)
 		}
 	}
 }

@@ -9,7 +9,9 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="241bf405-274f-451d-9f67-93a0216495f9" name="Changes" comment="квадратики разноцветные, кнопка есть, цифры есть, нет смены ориентации экрана">
+    <list default="true" id="241bf405-274f-451d-9f67-93a0216495f9" name="Changes" comment="все работает, но квадратики фиксированного размера">
+      <change beforePath="$PROJECT_DIR$/.idea/deploymentTargetDropDown.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/myapp/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/myapp/MainActivity.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -193,7 +195,14 @@
       <option name="project" value="LOCAL" />
       <updated>1698516091864</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="все работает, но квадратики фиксированного размера">
+      <created>1698616617201</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1698616617201</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -201,7 +210,34 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/dev" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/master" />
+                </option>
+              </RecentGroup>
+            </list>
           </value>
         </entry>
       </map>
@@ -212,6 +248,7 @@
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
     <MESSAGE value="квадратики разноцветные, кнопка есть, цифры есть, нет смены ориентации экрана" />
-    <option name="LAST_COMMIT_MESSAGE" value="квадратики разноцветные, кнопка есть, цифры есть, нет смены ориентации экрана" />
+    <MESSAGE value="все работает, но квадратики фиксированного размера" />
+    <option name="LAST_COMMIT_MESSAGE" value="все работает, но квадратики фиксированного размера" />
   </component>
 </project>
