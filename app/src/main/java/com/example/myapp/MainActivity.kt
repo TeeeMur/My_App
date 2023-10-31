@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,6 +46,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+	        val context = LocalContext.current
+	        val startMyActivity = fun (numOfCard: Int, numOfColor: Int) {
+		        startActivity(MainActivity2.newInstance(context, numOfCard, numOfColor))
+	        }
 	        if (savedInstanceState != null) {
 		        rectCount = savedInstanceState.getInt(STR_NAME_SAVE_COUNT)
 	        }
@@ -56,7 +62,7 @@ class MainActivity : ComponentActivity() {
 		        horizontalAlignment = Alignment.CenterHorizontally,
 		        verticalArrangement = Arrangement.SpaceBetween
 	        ) {
-		        MyLazyVerticalGrid(countOfRectangles)
+		        MyLazyVerticalGrid(countOfRectangles, startMyActivity)
 		        Button(
 			        onClick = {
 				        rectCount++
@@ -69,9 +75,10 @@ class MainActivity : ComponentActivity() {
 			        Text(
 				        text = stringResource(R.string.button_name),
 				        fontSize = 24.sp,
-				        color = Color.Black
+				        color = Color.Black,
 			        )
 		        }
+
 	        }
         }
     }
@@ -84,11 +91,15 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun Rectangle(num: Int) {
+fun Rectangle(num: Int, func: (Int, Int) -> Unit) {
+	val intentColor = num % 2
 	Card(modifier = Modifier
-		.requiredSize(100.dp),
+		.requiredSize(100.dp)
+		.clickable(onClick = {
+			func(num, intentColor)
+		}),
 		colors = CardDefaults.cardColors(
-			containerColor = (if (num % 2 == 0) Color.Red else Color.Blue)
+			containerColor = (if (intentColor == 0) Color.Red else Color.Blue)
 		),
 	){
 		Box(
@@ -106,7 +117,7 @@ fun Rectangle(num: Int) {
 }
 
 @Composable
-fun MyLazyVerticalGrid(countOfBoxes: MutableState<Int>) {
+fun MyLazyVerticalGrid(countOfBoxes: MutableState<Int>, func: (Int, Int) -> Unit) {
 	val screenConfig = LocalConfiguration.current
 	val countOfColumns =
 		(if (screenConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) INT_COUNT_OF_COLUMNS_LANDSCAPE else INT_COUNT_OF_COLUMNS_PORTRAIT)
@@ -119,7 +130,7 @@ fun MyLazyVerticalGrid(countOfBoxes: MutableState<Int>) {
 			.fillMaxHeight(gridMaxHeight)
 	){
 		items(countOfBoxes.value) {numOfBox ->
-			Rectangle(num = numOfBox)
+			Rectangle(num = numOfBox, func)
 		}
 	}
 }
